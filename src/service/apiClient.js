@@ -5,7 +5,10 @@ async function login(email, password) {
 }
 
 async function register(email, password) {
-  await post('users', { email, password }, false);
+  const res = await post('users', { email, password }, false);
+  if (res.status === 'fail') {
+    return res;
+  }
   return await login(email, password);
 }
 

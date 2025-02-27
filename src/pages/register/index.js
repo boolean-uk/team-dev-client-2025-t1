@@ -9,9 +9,35 @@ const Register = () => {
   const { onRegister } = useAuth();
   const [formData, setFormData] = useState({ email: '', password: '' });
 
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%&?*])[A-Za-z\d!@#$%&?*]{8,}$/;
+
   const onChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+  };
+
+  const validateEmail = async () => {
+    if (!emailRegex.test(formData.email)) {
+      return false;
+    }
+    return true;
+  };
+
+  const validatePassword = async () => {
+    if (!passwordRegex.test(formData.password)) {
+      return false;
+    }
+    return true;
+  };
+
+  const handleRegister = async () => {
+    const validEmail = await validateEmail();
+    const validPassword = validatePassword();
+    if (validEmail && validPassword) {
+      onRegister(formData.email, formData.password);
+    }
+    console.log('invalid email or password');
   };
 
   return (
@@ -40,11 +66,7 @@ const Register = () => {
               type={'password'}
             />
           </form>
-          <Button
-            text="Sign up"
-            onClick={() => onRegister(formData.email, formData.password)}
-            classes="green width-full"
-          />
+          <Button text="Sign up" onClick={handleRegister} classes="green width-full" />
         </div>
       </CredentialsCard>
     </div>

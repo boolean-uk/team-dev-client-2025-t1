@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Button from '../../components/button';
 import TextInput from '../../components/form/textInput';
 import useAuth from '../../hooks/useAuth';
@@ -8,6 +8,7 @@ import './register.css';
 const Register = () => {
   const { onRegister } = useAuth();
   const [formData, setFormData] = useState({ email: '', password: '' });
+  const [validForm, setvalidForm] = useState(false);
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%&?*])[A-Za-z\d!@#$%&?*]{8,}$/;
@@ -17,28 +18,25 @@ const Register = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const validateEmail = async () => {
-    if (!emailRegex.test(formData.email)) {
+  const validateEmail = (email) => {
+    if (!emailRegex.test(email)) {
       return false;
     }
     return true;
   };
 
-  const validatePassword = async () => {
-    if (!passwordRegex.test(formData.password)) {
+  const validatePassword = (password) => {
+    if (!passwordRegex.test(password)) {
       return false;
     }
     return true;
   };
 
-  const handleRegister = async () => {
-    const validEmail = await validateEmail();
-    const validPassword = validatePassword();
-    if (validEmail && validPassword) {
-      onRegister(formData.email, formData.password);
-    }
-    console.log('invalid email or password');
-  };
+  useEffect(() => {
+    const validEmail = validateEmail(formData.email);
+    const validPassword = validatePassword(formData.password);
+    setvalidForm(validEmail && validPassword);
+  }, [formData]);
 
   return (
     <div className="bg-blue register credentialpage">
@@ -66,7 +64,12 @@ const Register = () => {
               type={'password'}
             />
           </form>
-          <Button text="Sign up" onClick={handleRegister} classes="green width-full" />
+          <Button
+            text="Sign up"
+            onClick={() => onRegister(formData.email, formData.password)}
+            classes="green width-full"
+            disabled={!validForm}
+          />
         </div>
       </CredentialsCard>
     </div>

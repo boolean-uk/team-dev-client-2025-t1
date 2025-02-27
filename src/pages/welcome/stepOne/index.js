@@ -2,7 +2,7 @@ import ProfileIcon from '../../../assets/icons/profileIcon';
 import Form from '../../../components/form';
 import TextInput from '../../../components/form/textInput';
 
-const StepOne = ({ data, setData }) => {
+const StepOne = ({ data, setData, errors }) => {
   return (
     <>
       <div className="welcome-formheader">
@@ -22,9 +22,10 @@ const StepOne = ({ data, setData }) => {
             onChange={setData}
             value={data.firstName}
             name="firstName"
-            label={'First name'}
+            label={'First name *'}
           />
-          <TextInput onChange={setData} value={data.lastName} name="lastName" label={'Last name'} />
+          {errors.firstName && <span className="error">{errors.firstName}</span>}
+          <TextInput onChange={setData} value={data.lastName} name="lastName" label={'Last name *'} />
           <TextInput
             onChange={setData}
             value={data.githubUsername}

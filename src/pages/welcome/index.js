@@ -15,6 +15,8 @@ const Welcome = () => {
     bio: ''
   });
 
+  const [errors, setErrors] = useState({});
+
   const onChange = (event) => {
     const { name, value } = event.target;
 
@@ -22,6 +24,21 @@ const Welcome = () => {
       ...profile,
       [name]: value
     });
+  };
+
+  const validate = () => { // Form validation
+    let tempErrors = {};
+    if (!profile.firstName || !profile.lastName) {
+      tempErrors.firstName = 'Fill in the required fields';
+      setErrors(tempErrors);
+      return true;
+    }
+    else {
+      tempErrors = {};
+      return false;
+    }
+
+
   };
 
   const onComplete = () => {
@@ -35,8 +52,8 @@ const Welcome = () => {
         <p className="text-blue1">Create your profile to get started</p>
       </div>
 
-      <Stepper header={<WelcomeHeader />} onComplete={onComplete}>
-        <StepOne data={profile} setData={onChange} />
+      <Stepper header={<WelcomeHeader />} onComplete={onComplete} validate={validate}>
+        <StepOne data={profile} setData={onChange} errors={errors} />
         <StepTwo data={profile} setData={onChange} />
       </Stepper>
     </main>

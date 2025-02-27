@@ -47,6 +47,13 @@ const Register = () => {
     setvalidForm(validEmail && validPassword);
   }, [formData]);
 
+  const handleSubmit = async () => {
+    const res = await onRegister(formData.email, formData.password);
+    if (res.error) {
+      setEmailError(res.error);
+    }
+  };
+
   return (
     <div className="bg-blue register credentialpage">
       <CredentialsCard
@@ -65,7 +72,7 @@ const Register = () => {
               name="email"
               label={'Email *'}
             />
-            {emailError && <p>{emailError}</p>}
+            {emailError && <p className="error-message">{emailError}</p>}
             <TextInput
               value={formData.password}
               onChange={onChange}
@@ -73,11 +80,11 @@ const Register = () => {
               label={'Password *'}
               type={'password'}
             />
-            {passwordError && <p>{passwordError}</p>}
+            {passwordError && <p className="error-message">{passwordError}</p>}
           </form>
           <Button
             text="Sign up"
-            onClick={() => onRegister(formData.email, formData.password)}
+            onClick={handleSubmit}
             classes="green width-full"
             disabled={!validForm}
           />

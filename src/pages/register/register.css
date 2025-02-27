@@ -7,3 +7,6 @@
   gap: 24px;
   margin-bottom: 40px;
 }
+.error-message {
+  color: rgba(255, 0, 0, 0.573);
+}

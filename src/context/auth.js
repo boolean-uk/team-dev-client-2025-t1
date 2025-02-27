@@ -49,6 +49,7 @@ const AuthProvider = ({ children }) => {
     if (!res.status === 'fail') {
       navigate('/verification');
     }
+    return { error: res.data.email };
   };
 
   const handleCreateProfile = async (firstName, lastName, githubUrl, bio) => {

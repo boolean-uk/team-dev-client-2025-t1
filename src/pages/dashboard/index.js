@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import SearchIcon from '../../assets/icons/searchIcon';
 import Button from '../../components/button';
 import Card from '../../components/card';
@@ -7,10 +7,14 @@ import TextInput from '../../components/form/textInput';
 import Posts from '../../components/posts';
 import useModal from '../../hooks/useModal';
 import './style.css';
+import { Link } from 'react-router-dom';
+import { LoginContext } from '../../App';
 
 const Dashboard = () => {
   const [searchVal, setSearchVal] = useState('');
+  const { loggedInAs } = useContext(LoginContext);
 
+  console.log(loggedInAs);
   const onChange = (e) => {
     setSearchVal(e.target.value);
   };
@@ -32,9 +36,11 @@ const Dashboard = () => {
       <main>
         <Card>
           <div className="create-post-input">
-            <div className="profile-icon">
-              <p>AJ</p>
-            </div>
+            <Link to={`/profile/${loggedInAs.id}`}>
+              <div className="profile-icon">
+                <p>{`${loggedInAs.firstName[0]}${loggedInAs.lastName[0]}`}</p>
+              </div>
+            </Link>
             <Button text="What's on your mind?" onClick={showModal} />
           </div>
         </Card>

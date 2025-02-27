@@ -71,10 +71,19 @@ const AuthProvider = ({ children }) => {
 };
 
 const ProtectedRoute = ({ children }) => {
-  const { token } = useAuth();
+  const { token } = useAuth(); 
   const location = useLocation();
 
-  if (!token) {
+  let tok = token; // HACK: Use token from localstorage if token is null And path is "profile"
+  let pathname = location.pathname.split("/")[1]
+  if (pathname == "profile")
+  {
+    tok = localStorage.token // HACK: Manually load token from localstorage if trying to view profile
+    if (!location.state)     // HACK: Manually define location.state.from.pathname if not provided...
+      location.state = { from : { pathname : location.pathname}}
+  }
+
+  if (!tok) {
     return <Navigate to={'/login'} replace state={{ from: location }} />;
   }
 

@@ -13,6 +13,9 @@ const Register = () => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%&?*])[A-Za-z\d!@#$%&?*]{8,}$/;
 
+  const [emailError, setEmailError] = useState(null);
+  const [passwordError, setPasswordError] = useState(null);
+
   const onChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -20,15 +23,21 @@ const Register = () => {
 
   const validateEmail = (email) => {
     if (!emailRegex.test(email)) {
+      setEmailError('Email must follow the format: abc@abc.abc');
       return false;
     }
+    setEmailError(null);
     return true;
   };
 
   const validatePassword = (password) => {
     if (!passwordRegex.test(password)) {
+      setPasswordError(
+        'Password must be at least 8 characters long, contain an uppercase letter, a number, and a special character'
+      );
       return false;
     }
+    setPasswordError(null);
     return true;
   };
 
@@ -56,6 +65,7 @@ const Register = () => {
               name="email"
               label={'Email *'}
             />
+            {emailError && <p>{emailError}</p>}
             <TextInput
               value={formData.password}
               onChange={onChange}
@@ -63,6 +73,7 @@ const Register = () => {
               label={'Password *'}
               type={'password'}
             />
+            {passwordError && <p>{passwordError}</p>}
           </form>
           <Button
             text="Sign up"

@@ -3,10 +3,24 @@ import Card from '../card';
 import Comment from '../comment';
 import EditPostModal from '../editPostModal';
 import ProfileCircle from '../profileCircle';
+import HeartIcon from '../../assets/icons/hearticon';
+import HeartIconFill from '../../assets/icons/heartIcon-fill';
+import { useState } from 'react';
 import './style.css';
 
-const Post = ({ name, date, content, comments = [], likes = 0 }) => {
+const Post = ({ name, date, content, comments = [], initialLikes = 4 }) => {
   const { openModal, setModal } = useModal();
+  const [liked, setLiked] = useState(false);
+  const [likes, setLikes] = useState(initialLikes);
+
+  const toggleLike = () => {
+    if (liked) {
+      setLikes(likes - 1);
+    } else {
+      setLikes(likes + 1);
+    }
+    setLiked(!liked);
+  };
 
   const userInitials = name.match(/\b(\w)/g);
 
@@ -39,11 +53,17 @@ const Post = ({ name, date, content, comments = [], likes = 0 }) => {
           className={`post-interactions-container border-top ${comments.length ? 'border-bottom' : null}`}
         >
           <div className="post-interactions">
-            <div>Like</div>
+            <div onClick={toggleLike} className="like-button">
+              {liked ? <HeartIconFill /> : <HeartIcon />}
+            </div>
             <div>Comment</div>
           </div>
 
-          <p>{!likes && 'Be the first to like this'}</p>
+          <p>
+            {likes === 0
+              ? 'Be the first to like this'
+              : `${likes} ${likes === 1 ? 'like' : 'likes'}`}
+          </p>
         </section>
 
         <section>

@@ -21,6 +21,11 @@ async function getPosts() {
   return res.data.posts;
 }
 
+async function getUserProfileData(id) {
+  const res = await get(`profile/${id}`);
+  return res.data;
+}
+
 async function post(endpoint, data, auth = true) {
   return await request('POST', endpoint, data, auth);
 }
@@ -55,4 +60,4 @@ async function request(method, endpoint, data, auth = true) {
   return response.json();
 }
 
-export { login, getPosts, register, createProfile };
+export { login, getPosts, getUserProfileData, register, createProfile };

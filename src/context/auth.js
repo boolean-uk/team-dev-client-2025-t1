@@ -11,16 +11,20 @@ import jwt_decode from 'jwt-decode';
 
 const AuthContext = createContext();
 
-const AuthProvider = ({ children }) => {
+const AuthProvider = ({ children, setUser }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [token, setToken] = useState(null);
+  const [currentUserData, setCurrentUserData] = useState(null);
 
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
+    const storedUser = localStorage.getItem('user');
 
     if (storedToken) {
       setToken(storedToken);
+      setCurrentUserData(JSON.parse(storedUser)); // NOTE: Probably a safety concern...
+      setUser(JSON.parse(storedUser));
       navigate(location.state?.from?.pathname || '/');
     }
   }, [location.state?.from?.pathname, navigate]);
@@ -33,13 +37,16 @@ const AuthProvider = ({ children }) => {
     }
 
     localStorage.setItem('token', res.data.token);
-
+    localStorage.setItem('user', JSON.stringify(res.data.user));
+    setUser(res.data.user);
+    setCurrentUserData(res.data.user);
     setToken(res.token);
     navigate(location.state?.from?.pathname || '/');
   };
 
   const handleLogout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
     setToken(null);
   };
 
@@ -63,6 +70,7 @@ const AuthProvider = ({ children }) => {
 
   const value = {
     token,
+    currentUserData,
     onLogin: handleLogin,
     onLogout: handleLogout,
     onRegister: handleRegister,
@@ -73,16 +81,19 @@ const AuthProvider = ({ children }) => {
 };
 
 const ProtectedRoute = ({ children }) => {
-  const { token } = useAuth(); 
+  const { token } = useAuth();
   const location = useLocation();
 
+  console.log('Enter protected Route');
+
   let tok = token; // HACK: Use token from localstorage if token is null And path is "profile"
-  let pathname = location.pathname.split("/")[1]
-  if (pathname == "profile")
-  {
-    tok = localStorage.token // HACK: Manually load token from localstorage if trying to view profile
-    if (!location.state)     // HACK: Manually define location.state.from.pathname if not provided...
-      location.state = { from : { pathname : location.pathname}}
+  const pathname = location.pathname.split('/')[1];
+  if (pathname === 'profile') {
+    tok = localStorage.token; // HACK: Manually load token from localstorage if trying to view profile
+
+    if (!location.state)
+      // HACK: Manually define location.state.from.pathname if not provided...
+      location.state = { from: { pathname: location.pathname } };
   }
 
   if (!tok) {

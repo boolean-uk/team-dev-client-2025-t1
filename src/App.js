@@ -10,6 +10,7 @@ import { ModalProvider } from './context/modal';
 import Welcome from './pages/welcome';
 import ProfileView from './pages/profileView';
 import { useState, createContext } from 'react';
+import ProfileEdit from './pages/profileEdit';
 
 export const LoginContext = createContext();
 const App = () => {
@@ -47,6 +48,14 @@ const App = () => {
                 element={
                   <ProtectedRoute>
                     <ProfileView />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="profile/:id/edit"
+                element={
+                  <ProtectedRoute>
+                    <ProfileEdit />
                   </ProtectedRoute>
                 }
               />

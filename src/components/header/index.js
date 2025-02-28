@@ -23,40 +23,60 @@ const Header = () => {
     return null;
   }
 
+  const showIfLogin = () => {
+    if (loggedInAs === null) return <></>;
+    return (
+      <>
+        <section className="post-details">
+          <Link to={`/profile/${loggedInAs.id}`} onClick={onClickProfileIcon}>
+            <div className="profile-icon">
+              <p>{`${loggedInAs.firstName[0]}${loggedInAs.lastName[0]}`}</p>
+            </div>
+          </Link>
+
+          <div className="post-user-name">
+            <p>{`${loggedInAs.firstName} ${loggedInAs.lastName}`}</p>
+            {/* <small>Software Developer, Cohort 3</small> */}
+            <small>
+              {loggedInAs.occupation}, {loggedInAs.cohortId}
+            </small>
+          </div>
+        </section>
+      </>
+    );
+  };
+  const showIfLoginProfileIcon = () => {
+    if (loggedInAs === null) return <></>;
+    return (
+      <div className="profile-icon" onClick={onClickProfileIcon}>
+        <p>{`${loggedInAs.firstName[0]}${loggedInAs.lastName[0]}`}</p>
+      </div>
+    );
+  };
+  const showIfLoginListOption = () => {
+    if (loggedInAs === null) return <></>;
+    return (
+      <li>
+        <Link to={`/profile/${loggedInAs.id}`} onClick={onClickProfileIcon}>
+          <ProfileIcon /> <p>Profile</p>
+        </Link>
+      </li>
+    );
+  };
   return (
     <header>
       <FullLogo textColour="white" />
 
-      <div className="profile-icon" onClick={onClickProfileIcon}>
-        <p>{`${loggedInAs.firstName[0]}${loggedInAs.lastName[0]}`}</p>
-      </div>
+      {showIfLoginProfileIcon()}
 
       {isMenuVisible && (
         <div className="user-panel">
           <Card>
-            <section className="post-details">
-              <Link to={`/profile/${loggedInAs.id}`} onClick={onClickProfileIcon}>
-                <div className="profile-icon">
-                  <p>{`${loggedInAs.firstName[0]}${loggedInAs.lastName[0]}`}</p>
-                </div>
-              </Link>
-
-              <div className="post-user-name">
-                <p>{`${loggedInAs.firstName} ${loggedInAs.lastName}`}</p>
-                {/* <small>Software Developer, Cohort 3</small> */}
-                <small>
-                  {loggedInAs.occupation}, {loggedInAs.cohortId}
-                </small>
-              </div>
-            </section>
+            {showIfLogin()}
 
             <section className="user-panel-options border-top">
               <ul>
-                <li>
-                  <Link to={`/profile/${loggedInAs.id}`} onClick={onClickProfileIcon}>
-                    <ProfileIcon /> <p>Profile</p>
-                  </Link>
-                </li>
+                {showIfLoginListOption()}
                 <li>
                   <Link to="/">
                     <CogIcon /> <p>Settings &amp; Privacy</p>

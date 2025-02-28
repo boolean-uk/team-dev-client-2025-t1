@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import SearchIcon from '../../assets/icons/searchIcon';
 import Button from '../../components/button';
 import Card from '../../components/card';
@@ -9,15 +9,32 @@ import useModal from '../../hooks/useModal';
 import './style.css';
 import { Link } from 'react-router-dom';
 import { LoginContext } from '../../App';
+import { getUsers } from '../../service/apiClient';
+import ProfileCircle from '../../components/profileCircle';
 
 const Dashboard = () => {
   const [searchVal, setSearchVal] = useState('');
   const { loggedInAs } = useContext(LoginContext);
+  const [data, setData] = useState([]);
 
   console.log(loggedInAs);
   const onChange = (e) => {
     setSearchVal(e.target.value);
+    console.log(data);
   };
+
+  useEffect(() => {
+    fetchData();
+    async function fetchData() {
+      const res = await getUsers();
+      const filteredRes = res.filter((user) => user.firstName && user.lastName);
+      setData(filteredRes);
+    }
+  }, []);
+
+  const filteredData = data.filter((item) =>
+    item.firstName.toLowerCase().includes(searchVal.toLowerCase())
+  );
 
   // Use the useModal hook to get the openModal and setModal functions
   const { openModal, setModal } = useModal();
@@ -59,6 +76,25 @@ const Dashboard = () => {
         <Card>
           <form onSubmit={(e) => e.preventDefault()}>
             <TextInput icon={<SearchIcon />} value={searchVal} name="Search" onChange={onChange} />
+            {searchVal && (
+              <ul>
+                {filteredData.map((item, index) => (
+                  <li key={index}>
+                    <section className="post-details">
+                      <ProfileCircle initials={item.firstName[0] + item.lastName[0]} />
+
+                      <div className="post-user-name">
+                        <p>
+                          {item.firstName} {item.lastName}
+                        </p>
+                      </div>
+                    </section>
+
+                    <section className="post-content"></section>
+                  </li>
+                ))}
+              </ul>
+            )}
           </form>
         </Card>
 

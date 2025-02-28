@@ -1,11 +1,13 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import useModal from '../../hooks/useModal';
 import './style.css';
 import Button from '../button';
+import { LoginContext } from '../../App';
 
 const CreatePostModal = () => {
   // Use the useModal hook to get the closeModal function so we can close the modal on user interaction
   const { closeModal } = useModal();
+  const { loggedInAs } = useContext(LoginContext);
 
   const [message, setMessage] = useState(null);
   const [text, setText] = useState('');
@@ -27,10 +29,10 @@ const CreatePostModal = () => {
     <>
       <section className="create-post-user-details">
         <div className="profile-icon">
-          <p>AJ</p>
+          <p>{`${loggedInAs.firstName[0]}${loggedInAs.lastName[0]}`}</p>
         </div>
         <div className="post-user-name">
-          <p>Alex J</p>
+          <p>{`${loggedInAs.firstName} ${loggedInAs.lastName[0]}`}</p>
         </div>
       </section>
 

@@ -5,12 +5,15 @@ import Card from '../card';
 import ProfileIcon from '../../assets/icons/profileIcon';
 import CogIcon from '../../assets/icons/cogIcon';
 import LogoutIcon from '../../assets/icons/logoutIcon';
-import { NavLink } from 'react-router-dom';
-import { useState } from 'react';
+// import { NavLink, Link } from 'react-router-dom'; // NOTE: NavLink require page reload... stinky?
+import { Link } from 'react-router-dom'; // NOTE: NavLink require page reload... stinky?
+import { useContext, useState } from 'react';
+import { LoginContext } from '../../App';
 
 const Header = () => {
   const { token, onLogout } = useAuth();
   const [isMenuVisible, setIsMenuVisible] = useState(false);
+  const { loggedInAs } = useContext(LoginContext);
 
   const onClickProfileIcon = () => {
     setIsMenuVisible(!isMenuVisible);
@@ -25,39 +28,44 @@ const Header = () => {
       <FullLogo textColour="white" />
 
       <div className="profile-icon" onClick={onClickProfileIcon}>
-        <p>AJ</p>
+        <p>{`${loggedInAs.firstName[0]}${loggedInAs.lastName[0]}`}</p>
       </div>
 
       {isMenuVisible && (
         <div className="user-panel">
           <Card>
             <section className="post-details">
-              <div className="profile-icon">
-                <p>AJ</p>
-              </div>
+              <Link to={`/profile/${loggedInAs.id}`} onClick={onClickProfileIcon}>
+                <div className="profile-icon">
+                  <p>{`${loggedInAs.firstName[0]}${loggedInAs.lastName[0]}`}</p>
+                </div>
+              </Link>
 
               <div className="post-user-name">
-                <p>Alex Jameson</p>
-                <small>Software Developer, Cohort 3</small>
+                <p>{`${loggedInAs.firstName} ${loggedInAs.lastName}`}</p>
+                {/* <small>Software Developer, Cohort 3</small> */}
+                <small>
+                  {loggedInAs.occupation}, {loggedInAs.cohortId}
+                </small>
               </div>
             </section>
 
             <section className="user-panel-options border-top">
               <ul>
                 <li>
-                  <NavLink to="/">
+                  <Link to={`/profile/${loggedInAs.id}`} onClick={onClickProfileIcon}>
                     <ProfileIcon /> <p>Profile</p>
-                  </NavLink>
+                  </Link>
                 </li>
                 <li>
-                  <NavLink to="/">
+                  <Link to="/">
                     <CogIcon /> <p>Settings &amp; Privacy</p>
-                  </NavLink>
+                  </Link>
                 </li>
                 <li>
-                  <NavLink to="#" onClick={onLogout}>
+                  <Link to="#" onClick={onLogout}>
                     <LogoutIcon /> <p>Log out</p>
-                  </NavLink>
+                  </Link>
                 </li>
               </ul>
             </section>

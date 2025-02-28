@@ -9,43 +9,58 @@ import { AuthProvider, ProtectedRoute } from './context/auth';
 import { ModalProvider } from './context/modal';
 import Welcome from './pages/welcome';
 import ProfileView from './pages/profileView';
+import { useState, createContext } from 'react';
+import ProfileEdit from './pages/profileEdit';
 
+export const LoginContext = createContext();
 const App = () => {
+  const [loggedInAs, setLoggedInAs] = useState(null);
+  console.log(loggedInAs);
   return (
     <>
-      <AuthProvider>
+      <AuthProvider setUser={setLoggedInAs}>
         <ModalProvider>
-          <Routes>
-            <Route path="login" element={<Login />} />
-            <Route path="register" element={<Register />} />
-            <Route path="loading" element={<Loading />} />
-            <Route path="verification" element={<Verification />} />
+          <LoginContext.Provider value={{ loggedInAs, setLoggedInAs }}>
+            <Routes>
+              <Route path="login" element={<Login />} />
+              <Route path="register" element={<Register />} />
+              <Route path="loading" element={<Loading />} />
+              <Route path="verification" element={<Verification />} />
 
-            <Route
-              index
-              element={
-                <ProtectedRoute>
-                  <Dashboard />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="welcome"
-              element={
-                <ProtectedRoute disabledNav={true}>
-                  <Welcome />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="profile/:id"
-              element={
-                <ProtectedRoute>
-                  <ProfileView />
-                </ProtectedRoute>
-              }
-            />
-          </Routes>
+              <Route
+                index
+                element={
+                  <ProtectedRoute>
+                    <Dashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="welcome"
+                element={
+                  <ProtectedRoute disabledNav={true}>
+                    <Welcome />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="profile/:id"
+                element={
+                  <ProtectedRoute>
+                    <ProfileView />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="profile/:id/edit"
+                element={
+                  <ProtectedRoute>
+                    <ProfileEdit />
+                  </ProtectedRoute>
+                }
+              />
+            </Routes>
+          </LoginContext.Provider>
         </ModalProvider>
       </AuthProvider>
     </>

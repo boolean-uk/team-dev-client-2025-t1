@@ -10,15 +10,26 @@ import Menu from '../menu';
 import MenuItem from '../menu/menuItem';
 import './style.css';
 
-const ProfileCircle = ({ initials }) => {
+const ProfileCircle = ({ initials, menuEnabled=true, diameterPx=undefined}) => {
   const [isMenuVisible, setIsMenuVisible] = useState(false);
+  const [isMenuEnabled, setmenuEnabled] = useState(menuEnabled);
+  const pxToStr = (px) => {
+    return (px !== undefined) ? `${px}px` : "inital";
+  }
 
   return (
-    <div className="profile-circle" onClick={() => setIsMenuVisible(!isMenuVisible)}>
-      {isMenuVisible && <CascadingMenu />}
+    <div className="profile-circle" onClick={() => setIsMenuVisible(!isMenuVisible)} >
+      { isMenuEnabled && isMenuVisible && <CascadingMenu />}
 
-      <div className="profile-icon">
-        <p>{initials}</p>
+      <div className="profile-icon" style={{width:pxToStr(diameterPx), height:pxToStr(diameterPx)}} >
+        <p style={{
+          height: "inherit",
+          display: "flex",
+          justifyContent: "center",
+          alignContent: "center",
+          alignItems: "center",
+          fontSize: pxToStr(diameterPx/2 - diameterPx/7)
+        }}>{initials}</p>
       </div>
     </div>
   );

@@ -54,15 +54,24 @@ const AuthProvider = ({ children, setUser }) => {
     const res = await register(email, password);
     setToken(res.data.token);
     if (!(res.status === 'fail')) {
+      localStorage.setItem('user', JSON.stringify(res.data.user));
+      localStorage.setItem('token', res.data.token);
+      setUser(res.data.user);
+      setCurrentUserData(res.data.user);
       navigate('/verification');
     }
+
     return { error: res.data.email };
   };
 
   const handleCreateProfile = async (firstName, lastName, githubUrl, bio) => {
     const { userId } = jwt_decode(token);
 
-    await createProfile(userId, firstName, lastName, githubUrl, bio);
+    let res = await createProfile(userId, firstName, lastName, githubUrl, bio);
+
+    localStorage.setItem('user', JSON.stringify(res.data.user));
+    setUser(res.data.user);
+    setCurrentUserData(res.data.user);
 
     localStorage.setItem('token', token);
     navigate('/');

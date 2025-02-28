@@ -31,20 +31,27 @@ const Dashboard = () => {
     openModal();
   };
 
+  const showIfLoginListOption = () => {
+    // if (loggedInAs === null) return <></>;
+    if (loggedInAs === null || loggedInAs.firstName == undefined) return <></>;
+    // if (loggedInAs === null) return <></>;
+    return (
+      <Card>
+        <div className="create-post-input">
+          <Link to={`/profile/${loggedInAs.id}`}>
+            <div className="profile-icon">
+              <p>{`${loggedInAs.firstName[0]}${loggedInAs.lastName[0]}`}</p>
+            </div>
+          </Link>
+          <Button text="What's on your mind?" onClick={showModal} />
+        </div>
+      </Card>
+    );
+  };
   return (
     <>
       <main>
-        <Card>
-          <div className="create-post-input">
-            <Link to={`/profile/${loggedInAs.id}`}>
-              <div className="profile-icon">
-                <p>{`${loggedInAs.firstName[0]}${loggedInAs.lastName[0]}`}</p>
-              </div>
-            </Link>
-            <Button text="What's on your mind?" onClick={showModal} />
-          </div>
-        </Card>
-
+        {showIfLoginListOption()}
         <Posts />
       </main>
 

@@ -7,6 +7,7 @@ async function login(email, password) {
 async function register(email, password) {
   const res = await post('users', { email, password }, false);
   if (res.status === 'fail') {
+    console.log("Epic Fail? ")
     return res;
   }
   return await login(email, password);

@@ -24,7 +24,7 @@ const Header = () => {
   }
 
   const showIfLogin = () => {
-    if (loggedInAs === null) return <></>;
+    if (loggedInAs === null || loggedInAs.firstName == undefined) return <></>;
     return (
       <>
         <section className="post-details">
@@ -46,7 +46,9 @@ const Header = () => {
     );
   };
   const showIfLoginProfileIcon = () => {
-    if (loggedInAs === null) return <></>;
+    if (loggedInAs === null || loggedInAs.firstName == undefined) return <></>;
+    console.log('here:');
+    console.log(loggedInAs);
     return (
       <div className="profile-icon" onClick={onClickProfileIcon}>
         <p>{`${loggedInAs.firstName[0]}${loggedInAs.lastName[0]}`}</p>
@@ -54,7 +56,7 @@ const Header = () => {
     );
   };
   const showIfLoginListOption = () => {
-    if (loggedInAs === null) return <></>;
+    if (loggedInAs === null || loggedInAs.firstName == undefined) return <></>;
     return (
       <li>
         <Link to={`/profile/${loggedInAs.id}`} onClick={onClickProfileIcon}>
